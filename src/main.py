@@ -55,8 +55,20 @@ def main():
             
         run_call(base_url=base_url, api_key=api_key, method=sys.argv[2], path=sys.argv[3], body=body)
 
+    elif cmd == "submit":
+        if len(sys.argv) < 4:
+            print("usage: python main.py submit TYPE VALUE [NOTES]")
+            sys.exit(1)
+
+        setup_logging()
+        client = ApiClient(base_url, api_key)
+        type_ = sys.argv[2]
+        value = sys.argv[3]
+        notes = sys.argv[4] if len(sys.argv) > 4 else ""
+        submit_answer(client, type_, value, notes=notes)
+
     else:
-        print("usage: python src/main.py [health|start|call METHOD PATH]")
+        print("usage: python main.py [health|start|call METHOD PATH] OR python main.py [submit TYPE VALUE [NOTES]]")
         sys.exit(1)
 
 if __name__ == "__main__":
