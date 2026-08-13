@@ -33,6 +33,10 @@ Time elapsed, remaining, start time, etc. at api/v1/stats
 ### Layer challenges and attempted solutions
 Layer 1: dataset found at .../dataset
    'link': '</api/v1/dataset?batch=true&range=0-99>; rel="batch", </api/v1/stats>; rel="related"'
-   hashes computed by saved record count after dataset fetch: {'record_count': 500, 'hash_joined': '4e81ce4a67d69a5ef7415a632b2698ca14792450aaa781c44a0dedf53bd9e184', 'hash_newline': 'e04fd0f2caa66153fcb86c45eb14ef7b6e6fcde8b53ba1d142e05be85b74acda', 'hash_raw_batches': 'e4fd132a5332a43df6cad85aafb6ab358158d9df42530c2caf5adefb7fa965e9', 'hash_records_file': 'b05d6cba8a683a7dcdc3a8a53e7b19b46a8073adc33e126c5f693bbc04ffa10c', 'hash_decoded_binary': '63a2e90bd0e3290cd199b0ef5aad43230c636ede7a4a548a0d908a2d3a32c67c'}
+
+   different hashes computed on saved records after dataset fetch: {'record_count': 500, 'hash_joined': '4e81ce4a67d69a5ef7415a632b2698ca14792450aaa781c44a0dedf53bd9e184', 'hash_newline': 'e04fd0f2caa66153fcb86c45eb14ef7b6e6fcde8b53ba1d142e05be85b74acda', 'hash_raw_batches': 'e4fd132a5332a43df6cad85aafb6ab358158d9df42530c2caf5adefb7fa965e9', 'hash_records_file': 'b05d6cba8a683a7dcdc3a8a53e7b19b46a8073adc33e126c5f693bbc04ffa10c', 'hash_decoded_binary': '63a2e90bd0e3290cd199b0ef5aad43230c636ede7a4a548a0d908a2d3a32c67c'}
+
+   attempted all hash candidates. one fits.
 
 ### Solutions
+Layer1 solution of content_hash: 'hash_decoded_binary'
