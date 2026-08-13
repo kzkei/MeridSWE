@@ -1,6 +1,7 @@
 """Orchestration for api discovery"""
 from utils.log_config import setup_logging
 from utils.client import health_check, ApiClient
+from utils.submit import submit_answer
 from dotenv import load_dotenv, find_dotenv
 import os, sys, logging, json
 
