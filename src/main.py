@@ -2,7 +2,7 @@
 from utils.log_config import setup_logging
 from utils.client import health_check, ApiClient
 from dotenv import load_dotenv, find_dotenv
-import os, sys, logging
+import os, sys, logging, json
 
 # to check health without starting clock
 def run_health(base_url: str):
@@ -21,10 +21,13 @@ def run_start(base_url: str, api_key: str):
     log.info("Status %s", resp.status_code)
 
 # to discover / fetch an endpoint
-def run_call(base_url: str, api_key: str, method: str, path: str):
+def run_call(base_url: str, api_key: str, method: str, path: str, body=None):
     setup_logging()
     client = ApiClient(base_url, api_key)
-    return client.request(method, path)
+    kwargs = {}
+    if body is not None:
+        kwargs["json"] = body
+    return client.request(method, path, **kwargs)
 
 # to request quickly with full visibility by command-line
 def main():
@@ -41,9 +44,15 @@ def main():
         run_start(base_url=base_url, api_key=api_key)
     elif cmd == "call":
         if len(sys.argv) < 4:
-            print("usage: python src/main.py call METHOD PATH")
+            print("usage: python src/main.py call METHOD PATH --json JSON")
             sys.exit(1)
-        run_call(base_url=base_url, api_key=api_key, method=sys.argv[2], path=sys.argv[3])
+
+        body = None
+        # to send optional body json
+        if len(sys.argv) >= 6 and sys.argv[4] == "--json":
+            body = json.loads(sys.argv[5])
+            
+        run_call(base_url=base_url, api_key=api_key, method=sys.argv[2], path=sys.argv[3], body=body)
 
     else:
         print("usage: python src/main.py [health|start|call METHOD PATH]")
