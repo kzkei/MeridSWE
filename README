@@ -9,17 +9,26 @@ The rest of the contents in this 'Readme' are running notes as the puzzle is bei
 challenges/ - empty to start
 src/
    data/ - empty to start; to hold any data discovered
+   layer1/
+      download.py - downloads fetched records
+      verify.py - verifies length and computes common hashes
+   layer2/
+      decrypt.py - ended here
    utils/
+      client.py - APIClient where all requests/responses routed and logged
       log_config.py - sets up logging with two destinations - info+ in console and debug+ in session log
-      submit.py - initially unwritten
+      submit.py - initially unwritten - single place for POST
    main.py - orchestrates endpoint discovery/requesting by command-line args
-   session.log - to hold all logs for observability/trace
+   session.log - to hold all logs for observability/trace -- is gitignored
 tests/
    test_client.py - tests apiClient and related funcs
 .env
 .gitignore
 README - you are here
 requirements.txt
+
+Call for discovery, Submit for real submissions
+Layer logic in modules
 
 Main parses arguments (mainly 'call') and routes respectively
 ApiClient handles all HTTP and is logged in console (INFO+) along with file (DEBUG+)
@@ -30,13 +39,37 @@ valid_types for submission: "content_hash","decrypted_hash","analysis","repo","t
 Layer1 at /api/v1/dataset, 500 records, 25 per page, batch and range params
 Time elapsed, remaining, start time, etc. at api/v1/stats
 
+   /api/v1/health GET 200 Unauthenticated; minimal body
+   /api/v1/submit POST 415/400/200 Needs JSON; valid_types in 400
+   /api/v1/stats GET 200 Clock: remaining_seconds, etc
+   /api/v1/dataset GET 200 Paginated; Link → batch + stats
+   /api/v1/dataset?batch=true&range=0-99 GET 200 100 records/batch; rate limit 5/window
+   /api/v1/dataset/{id} GET 200 {data, id, source} — source: "seed" 
+   /api/v1/time, /key, /decrypt, … GET 404 Dead paths
+
 ### Layer challenges and attempted solutions
 Layer 1: dataset found at .../dataset
    'link': '</api/v1/dataset?batch=true&range=0-99>; rel="batch", </api/v1/stats>; rel="related"'
 
-   different hashes computed on saved records after dataset fetch: {'record_count': 500, 'hash_joined': '4e81ce4a67d69a5ef7415a632b2698ca14792450aaa781c44a0dedf53bd9e184', 'hash_newline': 'e04fd0f2caa66153fcb86c45eb14ef7b6e6fcde8b53ba1d142e05be85b74acda', 'hash_raw_batches': 'e4fd132a5332a43df6cad85aafb6ab358158d9df42530c2caf5adefb7fa965e9', 'hash_records_file': 'b05d6cba8a683a7dcdc3a8a53e7b19b46a8073adc33e126c5f693bbc04ffa10c', 'hash_decoded_binary': '63a2e90bd0e3290cd199b0ef5aad43230c636ede7a4a548a0d908a2d3a32c67c'}
+   Fetched 5 batches: range=0-99 - 400-499 with total 500 records saved
+   Verified count of 500
 
-   attempted all hash candidates. one fits.
+   Different hashes computed on saved records after dataset fetch: {'record_count': 500, 'hash_joined': '4e81ce4a67d69a5ef7415a632b2698ca14792450aaa781c44a0dedf53bd9e184', 'hash_newline': 'e04fd0f2caa66153fcb86c45eb14ef7b6e6fcde8b53ba1d142e05be85b74acda', 'hash_raw_batches': 'e4fd132a5332a43df6cad85aafb6ab358158d9df42530c2caf5adefb7fa965e9', 'hash_records_file': 'b05d6cba8a683a7dcdc3a8a53e7b19b46a8073adc33e126c5f693bbc04ffa10c', 'hash_decoded_binary': '63a2e90bd0e3290cd199b0ef5aad43230c636ede7a4a548a0d908a2d3a32c67c'}
+
+   Attempted all hash candidates. One fits.
+
+Layer2 - in progress at time limit:
+   Lots of dead endpoints that one might expect (/key, /secret, /decrypt)
+   Unable to find issued key via endpoint guessing
+   Attempted to look into AES-CBC variant when time expired
+
+   What didn't work:
+      /decrypt=true query param (server returns same encrypted blob)
+      decrypted_hash = hash_decoded_binary → correct: false (base64 decode alone insufficient)
+
 
 ### Solutions
 Layer1 solution of content_hash: 'hash_decoded_binary'
+Layer2 - attempted
+Layer3 - not reached
+Layer4 - not reached
