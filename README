@@ -1,12 +1,31 @@
 # HTTP Assessment repository
 
-This repository is the driver for solving an HTTP four-layer puzzle. The rest of the contents in this 'Readme' are running notes as the puzzle is being solved.
+This repository is the driver for solving an HTTP four-layer puzzle. 
+The rest of the contents in this 'Readme' are running notes as the puzzle is being solved.
 
 ## Running notes
 
 ### Repository Structure
+challenges/ - empty to start
+src/
+   data/ - empty to start; to hold any data discovered
+   utils/
+      log_config.py - sets up logging with two destinations - info+ in console and debug+ in session log
+      submit.py - initially unwritten
+   main.py - orchestrates endpoint discovery/requesting by command-line args
+   session.log - to hold all logs for observability/trace
+tests/
+   test_client.py - tests apiClient and related funcs
+.env
+.gitignore
+README - you are here
+requirements.txt
+
+Main parses arguments (mainly 'call') and routes respectively
+ApiClient handles all HTTP and is logged in console (INFO+) along with file (DEBUG+)
 
 ### Findings
+HealthCheck: service: 'assessment-api'
 
 ### Layer challenges and attempted solutions
 
