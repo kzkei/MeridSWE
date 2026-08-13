@@ -26,6 +26,7 @@ ApiClient handles all HTTP and is logged in console (INFO+) along with file (DEB
 
 ### Findings
 HealthCheck: service: 'assessment-api'
+valid_types for submission: "content_hash","decrypted_hash","analysis","repo","transcript","algorithm_answer"
 
 ### Layer challenges and attempted solutions
 
